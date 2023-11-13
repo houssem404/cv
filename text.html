@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Ajouter la CDN de Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Ajouter la CDN de jsPDF pour générer le PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <!-- Ajouter la CDN de mammoth.js pour générer le Word -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.0.3/mammoth.browser.min.js"></script>
+    <title>Formulaire CV</title>
+</head>
+<body>
+
+<div class="container mt-5">
+    <h1 class="mb-4">Formulaire CV</h1>
+
+    <!-- Formulaire de Coordonnées -->
+    <form id="coordonneesForm">
+        <h2>Coordonnées</h2>
+        <div class="mb-3">
+            <label for="nom" class="form-label">Nom :</label>
+            <input type="text" class="form-control" id="nom" name="nom" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="prenom" class="form-label">Prénom :</label>
+            <input type="text" class="form-control" id="prenom" name="prenom" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="email" class="form-label">Email :</label>
+            <input type="email" class="form-control" id="email" name="email" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="telephone" class="form-label">Téléphone :</label>
+            <input type="tel" class="form-control" id="telephone" name="telephone" required>
+        </div>
+    </form>
+
+    <!-- Formulaire À Propos de Moi -->
+    <form id="aproposForm" class="mt-4">
+        <h2>À Propos de Moi</h2>
+        <div class="mb-3">
+            <label for="apropos" class="form-label">Max. 150 caractères :</label>
+            <textarea class="form-control" id="apropos" name="apropos" maxlength="150"></textarea>
+        </div>
+    </form>
+
+    <!-- Formulaire Soft Skills -->
+    <form id="softSkillsForm" class="mt-4">
+        <h2>Soft Skills</h2>
+        <div class="mb-3">
+            <label for="softSkills" class="form-label">Soft Skills :</label>
+            <textarea class="form-control" id="softSkills" name="softSkills"></textarea>
+        </div>
+    </form>
+
+    <!-- Formulaire Expérience Professionnelle -->
+    <div class="experienceForms mt-4">
+        <h2>Expérience Professionnelle</h2>
+        <div class="experienceForm mb-4">
+            <div class="mb-3">
+                <label for="nomSociete" class="form-label">Nom Société :</label>
+                <input type="text" class="form-control" id="nomSociete" name="nomSociete" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="descriptionExperience" class="form-label">Description :</label>
+                <textarea class="form-control" id="descriptionExperience" name="descriptionExperience"></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="dateDebutExperience" class="form-label">Date de Début :</label>
+                <input type="date" class="form-control" id="dateDebutExperience" name="dateDebutExperience" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="dateFinExperience" class="form-label">Date de Fin (si applicable) :</label>
+                <input type="date" class="form-control" id="dateFinExperience" name="dateFinExperience">
+            </div>
+
+            <button type="button" class="btn btn-success me-2" onclick="ajouterExperience(this)">+</button>
+            <button type="button" class="btn btn-danger" onclick="supprimerExperience(this)">-</button>
+        </div>
+    </div>
+
+    <!-- Formulaire Formation -->
+    <div class="formationForms mt-4">
+        <h2>Formation</h2>
+        <div class="formationForm mb-4">
+            <div class="mb-3">
+                <label for="nomEcole" class="form-label">Nom École/Université :</label>
+                <input type="text" class="form-control" id="nomEcole" name="nomEcole" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="diplome" class="form-label">Diplôme obtenu :</label>
+                <input type="text" class="form-control" id="diplome" name="diplome" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="dateDebutFormation" class="form-label">Date de Début :</label>
+                <input type="date" class="form-control" id="dateDebutFormation" name="dateDebutFormation" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="dateFinFormation" class="form-label">Date de Fin (si applicable) :</label>
+                <input type="date" class="form-control" id="dateFinFormation" name="dateFinFormation">
+            </div>
+
+            <button type="button" class="btn btn-success me-2" onclick="ajouterFormation(this)">+</button>
+            <button type="button" class="btn btn-danger" onclick="supprimerFormation(this)">-</button>
+        </div>
+    </div>
+
+    <!-- Formulaire Autres Formations -->
+    <form id="autresFormationsForm" class="mt-4">
+        <h2>Autres Formations</h2>
+        <div class="mb-3">
+            <label for="autresFormations" class="form-label">Autres Formations :</label>
+            <textarea class="form-control" id="autresFormations" name="autresFormations"></textarea>
+        </div>
+    </form>
+
+    <!-- Formulaire Autres Activités -->
+    <form id="autresActivitesForm" class="mt-4">
+        <h2>Autres Activités</h2>
+        <div class="mb-3">
+            <label for="autresActivites" class="form-label">Autres Activités :</label>
+            <textarea class="form-control" id="autresActivites" name="autresActivites"></textarea>
+        </div>
+    </form>
+
+    <!-- Bouton pour Générer le CV en PDF et Word -->
+    <button class="btn btn-success mt-4" onclick="genererCV()">Générer CV (PDF & Word)</button>
+</div>
+
+<!-- Ajouter le script Bootstrap (JS) et Popper.js pour les fonctionnalités avancées de Bootstrap -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Script JavaScript -->
+<script>
+    function ajouterExperience(button) {
+        // Cloner le formulaire d'expérience
+        const experienceFormClone = button.closest('.experienceForm').cloneNode(true);
+        // Réinitialiser les champs du formulaire cloné
+        experienceFormClone.reset();
+        // Insérer le formulaire cloné avant le bouton "+"
+        button.closest('.experienceForm').insertAdjacentElement('afterend', experienceFormClone);
+    }
+
+    function supprimerExperience(button) {
+        // Supprimer le formulaire d'expérience parent du bouton "-"
+        const experienceForm = button.closest('.experienceForm');
+        experienceForm.remove();
+    }
+
+    function ajouterFormation(button) {
+        // Cloner le formulaire de formation
+        const formationFormClone = button.closest('.formationForm').cloneNode(true);
+        // Réinitialiser les champs du formulaire cloné
+        formationFormClone.reset();
+        // Insérer le formulaire cloné avant le bouton "+"
+        button.closest('.formationForm').insertAdjacentElement('afterend', formationFormClone);
+    }
+
+    function supprimerFormation(button) {
+        // Supprimer le formulaire de formation parent du bouton "-"
+        const formationForm = button.closest('.formationForm');
+        formationForm.remove();
+    }
+
+    function genererCV() {
+        // Collecter les données des formulaires
+        const coordonneesData = new FormData(document.getElementById('coordonneesForm'));
+        const aproposData = new FormData(document.getElementById('aproposForm'));
+        const softSkillsData = new FormData(document.getElementById('softSkillsForm'));
+        const experiencesData = collecterDonnees('.experienceForm');
+        const formationsData = collecterDonnees('.formationForm');
+        const autresFormationsData = collecterDonnees('#autresFormationsForm');
+        const autresActivitesData = collecterDonnees('#autresActivitesForm');
+
+        // Fusionner toutes les données
+        const toutesLesDonnees = [
+            ...Object.entries(Object.fromEntries(coordonneesData)),
+            ...Object.entries(Object.fromEntries(aproposData)),
+            ...Object.entries(Object.fromEntries(softSkillsData)),
+            ...experiencesData,
+            ...formationsData,
+            ...autresFormationsData,
+            ...autresActivitesData
+        ];
+
+        // Créer un objet pour les données
+        const donneesObjet = Object.fromEntries(toutesLesDonnees);
+
+        // Générer un fichier PDF
+        genererPDF(donneesObjet);
+
+        // Générer un fichier Word
+        genererWord(donneesObjet);
+    }
+
+    function collecterDonnees(selector) {
+        const elements = document.querySelectorAll(selector);
+        return Array.from(elements).map(form => Object.entries(Object.fromEntries(new FormData(form))));
+    }
+
+    function genererPDF(donnees) {
+        // Créer un objet jsPDF
+        const pdf = new jsPDF();
+
+        // Ajouter les données au PDF
+        pdf.text('Curriculum Vitae', 10, 10);
+        pdf.text('---------------------', 10, 18);
+
+        let yPos = 30;
+
+        Object.entries(donnees).forEach(([key, value]) => {
+            pdf.text(`${key}: ${value}`, 10, yPos);
+            yPos += 10;
+        });
+
+        // Enregistrer le PDF
+        pdf.save('cv.pdf');
+    }
+
+    function genererWord(donnees) {
+        const fichierWord = mammoth.extractRawText({value: `<html><body>${convertToHtml(donnees)}</body></html>`});
+
+        // Enregistrer le fichier Word
+        const blob = new Blob([fichierWord], {type: 'application/msword'});
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'cv.docx';
+        link.click();
+    }
+
+    function convertToHtml(donnees) {
+        let html = '<h1>Curriculum Vitae</h1><br/><br/>';
+
+        Object.entries(donnees).forEach(([key, value]) => {
+            html += `<p>${key}: ${value}</p>`;
+        });
+
+        return html;
+    }
+</script>
+
+</body>
+</html>
